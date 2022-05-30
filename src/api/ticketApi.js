@@ -1,13 +1,13 @@
 import axios from "axios";
 
-const rootUrl = "http://localhost:3001/v1/";
+const rootUrl = "https://vast-castle-36162.herokuapp.com/v1/";
 const ticketUlr = rootUrl + "ticket/";
 const closeTicketUrl = rootUrl + "ticket/close-ticket/";
 
 export const getAllTickets = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      const result = await axios.get("http://localhost:3001/v1/ticket", {
+      const result = await axios.get("https://vast-castle-36162.herokuapp.com/v1/ticket", {
         headers: {
           Authorization: sessionStorage.getItem("accessJWT"),
         },

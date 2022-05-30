@@ -9,7 +9,7 @@ export const SearchForm = () => {
 
   const handleOnChange = (e) => {
     const { value } = e.target;
-
+    console.log('Line 12', value)
     dispatch(filterSerachTicket(value));
   };
 

@@ -32,6 +32,7 @@ export const AddTicketForm = () => {
   const {
     user: { name },
   } = useSelector((state) => state.user);
+  const dsd = useSelector(st => console.log('Line 35', st.user))
 
   const { isLoading, error, successMsg } = useSelector(
     (state) => state.openTicket
@@ -55,6 +56,23 @@ export const AddTicketForm = () => {
     });
   };
 
+  const [user, setUser] = useState('');
+
+  useEffect(() => {
+    fetch('https://vast-castle-36162.herokuapp.com/v1/user/profile', {
+      headers: {
+        'authorization': JSON.parse(localStorage.getItem('crmSite')).refreshJWT
+      }
+    })
+      .then(res => res.json())
+      .then(data => {
+        setUser(data.user);
+        console.log('Line 70', data)
+      })
+      .catch(err => console.log('Line 78', err))
+
+  }, [])
+
   const handleOnSubmit = async (e) => {
     e.preventDefault();
 
@@ -67,8 +85,10 @@ export const AddTicketForm = () => {
       subject: !isSubjectValid,
     });
 
-    dispatch(openNewTicket({ ...frmData, sender: name }));
+    dispatch(openNewTicket({ ...frmData, sender: user.name, postUserId: user._id, email: user.email }));
   };
+
+
 
   return (
     <Jumbotron className="mt-3 add-new-ticket bg-light">
@@ -114,7 +134,7 @@ export const AddTicketForm = () => {
           </Col>
         </Form.Group>
         <Form.Group>
-          <Form.Label>Password</Form.Label>
+          <Form.Label>Message</Form.Label>
           <Form.Control
             as="textarea"
             name="message"

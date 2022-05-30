@@ -12,13 +12,13 @@ import { newUserRegistration } from "./userRegAction";
 import { useDispatch, useSelector } from "react-redux";
 
 const initialState = {
-  name: "Prem Acharya",
-  phone: "0410000000",
-  email: "fakeemail@email.com",
-  company: "Dented Code",
-  address: "George st Sydney",
-  password: "sfsd#3Dsg",
-  confirmPass: "sfsd#3Dsg",
+  name: "Cobleco",
+  phone: "",
+  email: "elearnnow1@gmail.com",
+  company: "CMR",
+  address: "Israel",
+  password: "",
+  confirmPass: "",
 };
 const passVerificationError = {
   isLenthy: false,
@@ -83,6 +83,7 @@ const RegistrationForm = () => {
       address,
       password,
     };
+    localStorage.setItem('name', JSON.stringify(name))
     dispatch(newUserRegistration(newRegistration));
   };
 
