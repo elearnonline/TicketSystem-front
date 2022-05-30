@@ -1,8 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Table } from "react-bootstrap";
 import { TicketTable } from "../../components/ticket-table/TicketTable.comp";
-import tickets from "../../assets/data/dummy-tickets.json";
+// import tickets from "../../assets/data/dummy-tickets.json";
 import { PageBreadcrumb } from "../../components/breadcrumb/Breadcrumb.comp";
 import { Link } from "react-router-dom";
 
@@ -12,14 +12,36 @@ export const Dashboard = () => {
   const dispatch = useDispatch();
   const { tickets } = useSelector((state) => state.tickets);
 
+  const [ticketData, setTicketData] = useState([])
   useEffect(() => {
-    if (!tickets.length) {
+    async function fetchSearchData() {
+      const response = await fetch(`https://vast-castle-36162.herokuapp.com/v1/ticket`, {
+        headers: {
+          'authorization': JSON.parse(localStorage.getItem('crmSite')).refreshJWT
+        }
+      })
+      const data = await response.json();
+      console.log('Line 23', data.result);
+      setTicketData(data.result)
+    }
+    fetchSearchData()
+  }, [])
+
+
+  useEffect(() => {
+    if (!ticketData.length) {
       dispatch(fetchAllTickets());
     }
-  }, [tickets, dispatch]);
+  }, [ticketData, dispatch]);
 
-  const pendingTickets = tickets.filter((row) => row.status !== "Closed");
-  const totlatTickets = tickets.length;
+
+
+  console.log('Line 33', ticketData)
+
+  const pendingTickets = ticketData.filter((row) => row.status !== "Closed");
+  const totlatTickets = ticketData.length;
+
+  console.log('Line 38', tickets)
   return (
     <Container>
       <Row>
@@ -52,7 +74,40 @@ export const Dashboard = () => {
 
       <Row>
         <Col className="recent-ticket">
-          <TicketTable tickets={tickets} />
+          {
+            <Table striped bordered hover>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Subjects</th>
+                  <th>Status</th>
+                  <th>Opened Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ticketData.length > 0 ? (
+                  ticketData?.map((row) => (
+                    <tr key={row._id}>
+                      <td>{row._id}</td>
+                      <td>
+                        <Link to={`/ticket/${row._id}`}>{row.subject}</Link>
+                      </td>
+                      <td>{row.status}</td>
+                      <td>{row.openAt && new Date(row.openAt).toLocaleString()}</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      No ticket show{" "}
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </Table>
+          }
+
+          {/* <TicketTable tickets={ticketData} /> */}
         </Col>
       </Row>
     </Container>

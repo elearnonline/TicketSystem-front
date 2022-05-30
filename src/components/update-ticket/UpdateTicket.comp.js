@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Button } from "react-bootstrap";
@@ -15,13 +15,25 @@ export const UpdateTicket = ({ _id }) => {
   const handleOnChange = (e) => {
     setMessage(e.target.value);
   };
+  const [userName, setUserName] = useState('');
 
+  useEffect(() => {
+    fetch('https://vast-castle-36162.herokuapp.com/v1/user/profile', {
+      headers: {
+        'authorization': JSON.parse(localStorage.getItem('crmSite')).refreshJWT
+      }
+    })
+      .then(res => res.json())
+      .then(data => setUserName(data.user.name))
+      .catch(err => console.log('Line 78', err))
+
+  }, [])
   const handleOnSubmit = (e) => {
     e.preventDefault();
 
     const msgObj = {
       message,
-      sender: name,
+      sender: userName,
     };
 
     dispatch(replyOnTicket(_id, msgObj));

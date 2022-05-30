@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const rootUrl = "http://localhost:3001/v1/";
+const rootUrl = "https://vast-castle-36162.herokuapp.com/v1/";
 const otpReqUrl = rootUrl + "user/reset-password";
 const updatePassUrl = rootUrl + "user/reset-password";
 

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const rootUrl = "http://localhost:3001/v1/";
+const rootUrl = "https://vast-castle-36162.herokuapp.com/v1/";
 const loginUrl = rootUrl + "user/login";
 const userProfileUrl = rootUrl + "user";
 const logoutUrl = rootUrl + "user/logout";
